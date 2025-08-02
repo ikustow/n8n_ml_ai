@@ -1,0 +1,174 @@
+{
+  "name": "context_generator",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -304,
+        0
+      ],
+      "id": "1141efe9-f819-47a6-8d25-ec0d1ca4cc32",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "session_table",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "session_id",
+              "keyValue": "={{ $json.sessionId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "bf99c25f-eb44-4b48-aa31-af236b1819ad",
+      "name": "Get a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "6IICvvLdHjaBlV2r",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "10f162e1-c863-4a09-a8ea-c181a6e69dc2",
+              "leftValue": "={{ $json.session_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "ff67440e-4116-4d3d-85bd-16dc2b8631b6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "tableId": "session_table",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "session_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.sessionId }}"
+            },
+            {
+              "fieldId": "segments_completed",
+              "fieldValue": "false"
+            },
+            {
+              "fieldId": "analysis_completed",
+              "fieldValue": "false"
+            },
+            {
+              "fieldId": "dataset_description",
+              "fieldValue": "student_id: Unique identifier for each student.\nage:Basic demographic attributes.\ngender:Basic demographic attributes.\nmajor: Basic demographic attributes.\nGPA: Cumulative grade point average.\ncourse_load: Number of enrolled courses.\navg_course_grade: Average numeric grade across courses.\nattendance_rate: Proportion of attended classes.\nenrollment_status: Current status (Active, Leave, Graduated).\nlms_logins_past_month: Number of LMS logins.\navg_session_duration_minutes: Average session time in LMS.\nassignment_submission_rate: % of assignments submitted on time.\nforum_participation_count: Student forum activity count.\nvideo_completion_rate: % of instructional videos watched.\nrisk_level: Target label for predictive modeling (Low, Medium, High)."
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        304,
+        96
+      ],
+      "id": "98ec0609-fe8d-43f1-8db9-c2661c0c4760",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "6IICvvLdHjaBlV2r",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cbd9558c-2a7b-4ac3-986f-059fd8d7eb5d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aff6233ea1a957f14a29dfbff3b08f776f10dd895024c1773cc4b009bd2f2c86"
+  },
+  "id": "SEOei5wgEZM1wO2O",
+  "tags": []
+}
